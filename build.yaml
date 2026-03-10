@@ -6,4 +6,3 @@ include:
     snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_KEYBOARD_NAME=\"EH\ TB\ v3.1\" "-DZMK_EXTRA_MODULES=/__w/ergohaven-zmk-config/ergohaven-zmk-config/zmk-input-processor-key"
     artifact-name: trackball_v3.1-ergohaven-zmk
-I. 
