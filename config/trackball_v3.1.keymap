@@ -22,12 +22,6 @@
         max-report = <4>;
     };
 
-    zip_scroll_accel: zip_scroll_accel {
-        compatible = "zmk,input-processor-accel";
-        #input-processor-cells = <0>;
-        gain = <384>;       /* max 1.5× boost at peak speed (256=1×) */
-        ref-speed = <50>;   /* speed below this = no accel            */
-    };
 };
 
 / {
@@ -119,7 +113,6 @@
         layers = <1>;
         input-processors =
             <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
-            <&zip_scroll_accel>,
             <&zip_xy_scaler 1 32>,
             <&zip_xy_to_scroll_mapper &zip_scroll_snap>;
     };
