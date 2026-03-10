@@ -1,0 +1,60 @@
+# Copyright (c) 2026 ergohaven-zmk-config contributors
+# SPDX-License-Identifier: MIT
+
+description: |
+  Input processor that applies velocity-based acceleration to XY motion events.
+
+  Tracks inter-event timing per axis. When the trackball is rolled faster,
+  event values are scaled up (multiplied). Gentle rolls pass through unchanged.
+
+  Acceleration model (integer math, no floats):
+    speed     = |delta| × 1000 / dt_ms
+    excess    = speed - ref_speed            (zero if below threshold)
+    multiplier = 256 + excess × (gain - 256) / ref_speed
+    output    = value × multiplier / 256     (clamped to [1× .. gain/256×])
+
+  Designed to sit before a scaler or scroll-mapper in the pipeline:
+
+    scroller {
+        layers = <1>;
+        input-processors =
+            <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
+            <&zip_scroll_accel>,
+            <&zip_xy_scaler 1 32>,
+            <&zip_xy_to_scroll_mapper &zip_scroll_snap>;
+    };
+
+compatible: "zmk,input-processor-accel"
+
+properties:
+  "#input-processor-cells":
+    type: int
+    required: true
+    const: 0
+    description: No phandle-cell parameters.
+
+  gain:
+    type: int
+    required: true
+    description: |
+      Maximum multiplier expressed in 1/256 units.
+        256 = 1.0× (no acceleration at all)
+        384 = 1.5× max
+        512 = 2.0× max
+        768 = 3.0× max
+      The multiplier ramps linearly from 1× (at ref-speed) to gain/256
+      (at 2× ref-speed), then clamps.
+
+  ref-speed:
+    type: int
+    required: true
+    description: |
+      Speed threshold below which no acceleration is applied.
+      Speed is measured as |delta| × 1000 / dt_ms (units per second).
+      Typical value for a 32mm trackball: 30–100.
+      Lower values → acceleration kicks in sooner.
+
+  track-remainders:
+    type: boolean
+    description: |
+      Placeholder for ZMK input_listener macro compatibility.

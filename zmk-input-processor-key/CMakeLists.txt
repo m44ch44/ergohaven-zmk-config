@@ -1,1 +1,3 @@
-add_subdirectory_ifdef(CONFIG_ZMK_INPUT_PROCESSOR_KEY src)
+if(CONFIG_ZMK_INPUT_PROCESSOR_KEY OR CONFIG_ZMK_INPUT_PROCESSOR_ACCEL)
+  add_subdirectory(src)
+endif()

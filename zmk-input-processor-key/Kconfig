@@ -8,3 +8,13 @@ config ZMK_INPUT_PROCESSOR_KEY
       keyboard arrow-key HID reports.  Mirrors the behaviour of
       TrackballArrows.ahk: movement past a threshold fires one key
       press/release cycle; a burst cap limits events per poll cycle.
+
+config ZMK_INPUT_PROCESSOR_ACCEL
+    bool "ZMK Input Processor: Velocity-based acceleration"
+    default y if DT_HAS_ZMK_INPUT_PROCESSOR_ACCEL_ENABLED
+    depends on ZMK_POINTING
+    help
+      Enables the zmk,input-processor-accel driver which scales XY
+      motion events based on trackball velocity.  Gentle rolls pass
+      through unchanged; fast rolls are amplified up to a configurable
+      gain.  Useful for scroll acceleration.

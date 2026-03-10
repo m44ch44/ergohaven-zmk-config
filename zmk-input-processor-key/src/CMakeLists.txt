@@ -1,1 +1,2 @@
 target_sources(app PRIVATE input_processor_key.c)
+target_sources_ifdef(CONFIG_ZMK_INPUT_PROCESSOR_ACCEL app PRIVATE input_processor_accel.c)
