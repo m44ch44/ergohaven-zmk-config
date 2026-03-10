@@ -1,0 +1,1 @@
+add_subdirectory_ifdef(CONFIG_ZMK_INPUT_PROCESSOR_KEY src)

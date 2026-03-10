@@ -3,6 +3,7 @@
 #include <input/processors.dtsi>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <dt-bindings/zmk/matrix_transform.h>
+#include <dt-bindings/zmk/keys.h>
 #include <scroll-snap.dtsi>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
@@ -12,11 +13,11 @@
     zip_arrows: zip_arrows {
         compatible = "zmk,input-processor-key";
         #input-processor-cells = <0>;
-        x-key-negative = <KEY_LEFT>;
-        x-key-positive = <KEY_RIGHT>;
+        x-key-negative = <LEFT>;     /* ZMK HID 0x50 – Left Arrow  */
+        x-key-positive = <RIGHT>;    /* ZMK HID 0x4F – Right Arrow */
         x-threshold = <5>;
-        y-key-negative = <KEY_UP>;
-        y-key-positive = <KEY_DOWN>;
+        y-key-negative = <UP>;       /* ZMK HID 0x52 – Up Arrow    */
+        y-key-positive = <DOWN>;     /* ZMK HID 0x51 – Down Arrow  */
         y-threshold = <5>;
         max-report = <4>;
     };

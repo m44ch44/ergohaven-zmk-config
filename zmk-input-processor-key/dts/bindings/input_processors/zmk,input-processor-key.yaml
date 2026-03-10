@@ -1,0 +1,97 @@
+# Copyright (c) 2026 ergohaven-zmk-config contributors
+# SPDX-License-Identifier: MIT
+
+description: |
+  Input processor that converts trackball/mouse XY motion deltas into
+  discrete keyboard arrow-key HID press+release events.
+
+  Replicates TrackballArrows.ahk v4.0 entirely in ZMK firmware:
+    - Accumulates scaled XY deltas (dead-zone implicit in threshold)
+    - When |accumulator| >= threshold → fires N press+release cycles
+    - Burst cap limits maximum presses per sensor poll event
+    - Original REL_X / REL_Y events are suppressed (cursor stays still)
+
+  Typical pipeline (layer 2 = arrows mode):
+
+    arrows {
+        layers = <2>;
+        input-processors =
+            <&zip_xy_transform INPUT_TRANSFORM_DOMINANT_AXIS>,
+            <&zip_xy_scaler 1 20>,
+            <&zip_arrows>;
+    };
+
+  Where zip_arrows is defined in the root devicetree node:
+
+    zip_arrows: zip_arrows {
+        compatible = "zmk,input-processor-key";
+        #input-processor-cells = <0>;
+        x-key-negative = <LEFT>;    // ZMK HID usage 0x50
+        x-key-positive = <RIGHT>;   // ZMK HID usage 0x4F
+        x-threshold    = <5>;
+        y-key-negative = <UP>;      // ZMK HID usage 0x52
+        y-key-positive = <DOWN>;    // ZMK HID usage 0x51
+        y-threshold    = <5>;
+        max-report     = <4>;
+    };
+
+compatible: "zmk,input-processor-key"
+
+properties:
+  "#input-processor-cells":
+    type: int
+    required: true
+    const: 0
+    description: |
+      No phandle-cell parameters — all configuration lives in node
+      properties below.
+
+  x-key-negative:
+    type: int
+    required: true
+    description: |
+      ZMK HID keyboard usage ID for negative X movement (moving left).
+      Use ZMK key constants from <dt-bindings/zmk/keys.h>, e.g. LEFT (0x50).
+
+  x-key-positive:
+    type: int
+    required: true
+    description: |
+      ZMK HID keyboard usage ID for positive X movement (moving right).
+      e.g. RIGHT (0x4F).
+
+  x-threshold:
+    type: int
+    required: true
+    description: |
+      Minimum absolute accumulated X delta before one key press fires.
+      Combined with an upstream zip_xy_scaler to represent the effective
+      sensitivity (threshold × scaler_denominator = raw CPI units needed).
+
+  y-key-negative:
+    type: int
+    required: true
+    description: |
+      ZMK HID keyboard usage ID for negative Y movement (moving up).
+      e.g. UP (0x52).
+
+  y-key-positive:
+    type: int
+    required: true
+    description: |
+      ZMK HID keyboard usage ID for positive Y movement (moving down).
+      e.g. DOWN (0x51).
+
+  y-threshold:
+    type: int
+    required: true
+    description: |
+      Minimum absolute accumulated Y delta before one key press fires.
+
+  max-report:
+    type: int
+    default: 4
+    description: |
+      Maximum number of key presses emitted per sensor event.
+      Prevents event-queue buildup during fast motion — mirrors
+      AHK's MAX_BURST = 4 config constant.
