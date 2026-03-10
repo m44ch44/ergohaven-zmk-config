@@ -41,6 +41,7 @@
         arrows_combo {
             key-positions = <0 1>;
             bindings = <&mo 2>;
+            timeout-ms = <200>;
         };
 
         base_combo {
@@ -109,19 +110,19 @@
 &trackball_listener {
     input-processors = <&zip_xy_scaler 9 20>;
 
+    arrows {
+        layers = <2>;
+        input-processors =
+            <&zip_xy_scaler 1 20>,
+            <&zip_arrows>;
+    };
+
     scroller {
         layers = <1>;
         input-processors =
             <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
             <&zip_xy_scaler 1 32>,
             <&zip_xy_to_scroll_mapper &zip_scroll_snap>;
-    };
-
-    arrows {
-        layers = <2>;
-        input-processors =
-            <&zip_xy_scaler 1 20>,
-            <&zip_arrows>;
     };
 
     sniper {
