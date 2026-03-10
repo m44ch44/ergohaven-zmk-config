@@ -9,6 +9,20 @@
 #include <dt-bindings/zmk/pointing.h>
 
 / {
+    zip_arrows: zip_arrows {
+        compatible = "zmk,input-processor-key";
+        #input-processor-cells = <0>;
+        x-key-negative = <KEY_LEFT>;
+        x-key-positive = <KEY_RIGHT>;
+        x-threshold = <5>;
+        y-key-negative = <KEY_UP>;
+        y-key-positive = <KEY_DOWN>;
+        y-threshold = <5>;
+        max-report = <4>;
+    };
+};
+
+/ {
     default_transform: keymap_transform_0 {
         compatible = "zmk,matrix-transform";
         columns = <2>;
@@ -23,8 +37,13 @@
         compatible = "zmk,combos";
 
         base_combo {
-            bindings = <&hold_mo_tap_mkp 1 MB3>;
             key-positions = <0 1>;
+            bindings = <&hold_mo_tap_mkp 1 MB3>;
+        };
+
+        arrows_combo {
+            key-positions = <2 3>;
+            bindings = <&tog 2>;
         };
     };
 
@@ -47,7 +66,6 @@
             compatible = "zmk,behavior-hold-tap";
             label = "HOLD_MO_TAP_MKP";
             bindings = <&mo>, <&mkp>;
-
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             hold-while-undecided;
@@ -63,7 +81,6 @@
 &mkp MB1  &hold_mo_tap_mkp 1 MB2
 &adj1     &adj2
             >;
-
             display-name = "Base";
         };
 
@@ -72,17 +89,15 @@
 &trans  &trans
 &trans  &trans
             >;
-
             display-name = "Scroll";
         };
 
-        sniper {
+        arrows {
             bindings = <
 &trans  &trans
 &trans  &trans
             >;
-
-            display-name = "Sniper";
+            display-name = "Arrows";
         };
     };
 };
@@ -100,13 +115,21 @@
             <&zip_xy_to_scroll_mapper &zip_scroll_snap>;
     };
 
-    sniper {
+    arrows {
         layers = <2>;
+        input-processors =
+            <&zip_xy_transform INPUT_TRANSFORM_DOMINANT_AXIS>,
+            <&zip_xy_scaler 1 20>,
+            <&zip_arrows>;
+    };
+
+    sniper {
+        layers = <3>;
         input-processors = <&zip_xy_scaler 1 4>;
     };
 
     adjust {
-        layers = <3>;
+        layers = <4>;
         input-processors = <&zip_xy_scaler 1 8>;
     };
 };
