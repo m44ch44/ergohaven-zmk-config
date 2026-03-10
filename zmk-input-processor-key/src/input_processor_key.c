@@ -39,11 +39,11 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 /* ── Per-instance static config (from DT properties) ─────────────────────── */
 struct ip_key_config {
-    uint16_t x_key_negative; /* ZMK HID usage ID: e.g. LEFT  = 0x50 */
-    uint16_t x_key_positive; /* ZMK HID usage ID: e.g. RIGHT = 0x4F */
+    uint32_t x_key_negative; /* Full ZMK key encoding, e.g. LEFT  = 0x00070050 */
+    uint32_t x_key_positive; /* Full ZMK key encoding, e.g. RIGHT = 0x0007004F */
     uint16_t x_threshold;    /* Accumulated |delta| needed per key press */
-    uint16_t y_key_negative; /* ZMK HID usage ID: e.g. UP    = 0x52 */
-    uint16_t y_key_positive; /* ZMK HID usage ID: e.g. DOWN  = 0x51 */
+    uint32_t y_key_negative; /* Full ZMK key encoding, e.g. UP    = 0x00070052 */
+    uint32_t y_key_positive; /* Full ZMK key encoding, e.g. DOWN  = 0x00070051 */
     uint16_t y_threshold;
     uint8_t  max_report;     /* Max key presses per processing cycle (burst cap) */
 };
@@ -62,12 +62,12 @@ struct ip_key_data {
  *
  * This matches AHK's SendInput per-key down+up pairs.
  */
-static void send_key_n(uint16_t keycode, int n)
+static void send_key_n(uint32_t keycode, int n)
 {
     for (int i = 0; i < n; i++) {
-        zmk_hid_keyboard_press(keycode);
+        zmk_hid_press(keycode);
         zmk_endpoints_send_report(HID_USAGE_KEY);
-        zmk_hid_keyboard_release(keycode);
+        zmk_hid_release(keycode);
         zmk_endpoints_send_report(HID_USAGE_KEY);
     }
 }

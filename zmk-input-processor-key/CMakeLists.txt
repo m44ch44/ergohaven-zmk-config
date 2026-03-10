@@ -1,3 +1,1 @@
-if(CONFIG_ZMK_INPUT_PROCESSOR_KEY OR CONFIG_ZMK_INPUT_PROCESSOR_ACCEL)
-  add_subdirectory(src)
-endif()
+add_subdirectory(src)
