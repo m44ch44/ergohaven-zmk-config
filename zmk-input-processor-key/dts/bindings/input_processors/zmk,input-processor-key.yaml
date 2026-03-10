@@ -95,3 +95,12 @@ properties:
       Maximum number of key presses emitted per sensor event.
       Prevents event-queue buildup during fast motion — mirrors
       AHK's MAX_BURST = 4 config constant.
+
+  track-remainders:
+    type: boolean
+    description: |
+      Whether the input listener should maintain per-axis
+      remainder accumulators for this processor.  Not needed
+      for this driver (it keeps its own accumulators) but the
+      property must exist in the binding so ZMK's input_listener
+      macros can query it.

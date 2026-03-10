@@ -66,9 +66,9 @@ static void send_key_n(uint16_t keycode, int n)
 {
     for (int i = 0; i < n; i++) {
         zmk_hid_keyboard_press(keycode);
-        zmk_endpoints_send_report(HID_USAGE_GEN_KEYBOARD);
+        zmk_endpoints_send_report(HID_USAGE_KEY);
         zmk_hid_keyboard_release(keycode);
-        zmk_endpoints_send_report(HID_USAGE_GEN_KEYBOARD);
+        zmk_endpoints_send_report(HID_USAGE_KEY);
     }
 }
 
