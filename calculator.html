@@ -466,7 +466,7 @@
 
 <div class="calculator" role="application" aria-label="Calculator">
   <!-- History toggle -->
-  <button class="history-toggle" id="historyToggle" aria-label="Toggle history" title="History">&#x1F552;</button>
+  <button class="history-toggle" id="historyToggle" aria-label="Toggle history" title="History">&#x27F2;</button>
 
   <!-- History panel -->
   <div class="history-panel" id="historyPanel">
@@ -625,7 +625,7 @@
     // Remove old items
     historyList.querySelectorAll('.history-item').forEach(function (el) { el.remove(); });
     history.forEach(function (item, i) {
-      var div = document.createElement('div');
+      const div = document.createElement('div');
       div.className = 'history-item';
       div.setAttribute('tabindex', '0');
       div.setAttribute('role', 'button');
@@ -647,7 +647,7 @@
   }
 
   function escapeHtml(str) {
-    var div = document.createElement('div');
+    const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
   }
@@ -682,7 +682,7 @@
 
   function inputOperator(op) {
     if (operator && !shouldResetDisplay) {
-      var result = calculate(previousInput, operator, currentInput);
+      const result = calculate(previousInput, operator, currentInput);
       if (result === 'Error') {
         currentInput = 'Error';
         expression = '';
@@ -708,9 +708,9 @@
 
   function inputEquals() {
     if (!operator || !previousInput) return;
-    var fullExpr = previousInput + getOperatorSymbol(operator) + currentInput;
-    var result = calculate(previousInput, operator, currentInput);
-    var resultStr = result === 'Error' ? 'Error' : String(result);
+    const fullExpr = previousInput + getOperatorSymbol(operator) + currentInput;
+    const result = calculate(previousInput, operator, currentInput);
+    const resultStr = result === 'Error' ? 'Error' : String(result);
 
     if (resultStr !== 'Error') {
       saveHistory(fullExpr.trim(), formatNumber(resultStr));
@@ -746,7 +746,7 @@
   }
 
   function inputPercent() {
-    var num = parseFloat(currentInput);
+    const num = parseFloat(currentInput);
     if (isNaN(num)) return;
     currentInput = String(num / 100);
     updateDisplay();
@@ -754,9 +754,9 @@
 
   // Scientific functions
   function applySciFunc(fn) {
-    var num = parseFloat(currentInput);
+    const num = parseFloat(currentInput);
     if (isNaN(num)) { currentInput = 'Error'; updateDisplay(); return; }
-    var result;
+    let result;
     switch (fn) {
       case 'sin': result = Math.sin(num * Math.PI / 180); break;
       case 'cos': result = Math.cos(num * Math.PI / 180); break;
@@ -802,8 +802,8 @@
   document.querySelectorAll('.btn').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
       createRipple(e);
-      var action = btn.dataset.action;
-      var value = btn.dataset.value;
+      const action = btn.dataset.action;
+      const value = btn.dataset.value;
 
       switch (action) {
         case 'number': inputNumber(value); break;
@@ -860,7 +860,7 @@
     pill.addEventListener('click', function () {
       document.querySelectorAll('.mode-pill').forEach(function (p) { p.classList.remove('active'); });
       pill.classList.add('active');
-      var mode = pill.dataset.mode;
+      const mode = pill.dataset.mode;
       if (mode === 'scientific') {
         sciButtons.classList.add('show');
       } else {
